@@ -1,13 +1,23 @@
 package controllers
 
 import (
-	"fmt"
-	"github.com/julienschmidt/httprouter"
+	"log"
 	"net/http"
+	"text/template"
+
+	"github.com/julienschmidt/httprouter"
 )
 
+// HomeHandler is the handler for the homepage
+func (s *Server) HomeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params, pageVariables PageVariables) {
+	tpl, err := template.ParseFiles(pageVariables.TemplatePath)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		log.Print("Template parsing error", err)
+	}
 
-
-func (s *Server) HomeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	fmt.Println("Homepage!!")
+	err = tpl.Execute(w, pageVariables)
+	if err != nil {
+		log.Print("Template execute error", err)
+	}
 }
