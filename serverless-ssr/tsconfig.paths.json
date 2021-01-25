@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "../",
     "paths": {
-      "@libs/*": ["src/libs/*"]
+      "@libs/*": ["serverless-ssr/src/libs/*"],
+      "@Frontend/*": ["frontend/src/*"]
     }
   }
 }

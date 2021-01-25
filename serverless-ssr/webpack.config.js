@@ -6,6 +6,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { babelLoader, fileLoader, assetResource } = require("../frontend/webpack/loaders")
 
 const include = [
+  path.resolve(__dirname, "../frontend/src"),
   path.resolve(__dirname, './src'),
 ]
 
@@ -27,7 +28,7 @@ module.exports = {
   entry: slsw.lib.entries,
   devtool: slsw.lib.webpack.isLocal ? 'eval-cheap-module-source-map' : 'source-map',
   resolve: {
-    extensions: ['.mjs', '.json', '.ts'],
+    extensions: ['.mjs', '.json', '.ts', '.tsx', '.js', '.jsx'],
     symlinks: false,
     cacheWithContext: false,
     plugins: [

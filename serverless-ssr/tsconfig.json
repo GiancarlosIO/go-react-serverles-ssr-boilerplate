@@ -13,17 +13,19 @@
     "target": "ES2019",
     "outDir": "lib",
     "jsx": "react",
-    "rootDir": "./"
+    "rootDir": "../"
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "../frontend/src/**/*.ts",
+    "../frontend/src/**/*.tsx"
   ],
   "exclude": [
-    "node_modules/**/*",
-    ".serverless/**/*",
-    ".webpack/**/*",
-    "_warmup/**/*",
-    ".vscode/**/*"
+    "./node_modules/**/*",
+    "./.serverless/**/*",
+    "./.webpack/**/*",
+    "./_warmup/**/*",
+    "./.vscode/**/*",
   ]
 }
