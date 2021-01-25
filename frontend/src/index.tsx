@@ -9,4 +9,11 @@ const renderer: ReactDOM.Renderer = needSSR
   ? ReactDOM.hydrate
   : ReactDOM.render;
 
+if (needSSR) {
+  console.log(
+    '%c [Serverless SSR Enabled]: Using ReactDOM.Hydrate to render the React App! ',
+    'color: #1794cd',
+  );
+}
+
 renderer(<App />, mainNode);

@@ -6,6 +6,7 @@ const base = require('./webpack.base');
 
 module.exports = webpackMerge.merge(base, {
   mode: 'development',
+  devtool: 'eval-cheap-module-source-map',
   output: {
     publicPath: 'http://localhost:9000/static/',
   },
