@@ -5,6 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
+const { babelLoader, fileLoader, assetResource } = require('./loaders');
+
 module.exports = {
   context: __dirname,
   entry: '../src/index.tsx',
@@ -18,22 +20,7 @@ module.exports = {
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx'],
   },
   module: {
-    rules: [
-      {
-        test: /\.(js|jsx|ts|tsx)$/,
-        use: 'babel-loader',
-        include: path.resolve(__dirname, '../src'),
-      },
-      {
-        test: /\.(png|jpe?g|gif)$/i,
-        use: 'file-loader',
-        include: path.resolve(__dirname, '../src'),
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif|ico|favicon|xml|webapp)$/i,
-        type: 'asset/resource',
-      },
-    ],
+    rules: [babelLoader, fileLoader, assetResource],
   },
   plugins: [
     new HtmlWebpackPlugin({
