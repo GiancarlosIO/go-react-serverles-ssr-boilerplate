@@ -1,10 +1,13 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
@@ -32,11 +35,17 @@ type PageVariables struct {
 	Template *template.Template
 }
 
+// Handler defined the function that a controller should expose
 type Handler func(w http.ResponseWriter, r *http.Request, ps httprouter.Params, pageVariables PageVariables)
 
 // CreateHandler creates a handler that calls the handler with the pageVariables struct
 // it will use the webpackEntry value to fetch the ssr data and also to map the template and static paths needed for the current page
 func (s *Server) CreateHandler(webpackEntry string, handler Handler) httprouter.Handle {
+	ssrEndpoint := os.Getenv("SSR_ENDPOINT")
+	if ssrEndpoint == "" {
+		ssrEndpoint = "http://localhost:3000/dev"
+	}
+	ssrEndpoint = ssrEndpoint + "/" + webpackEntry
 
 	return func(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		start := time.Now()
@@ -46,13 +55,31 @@ func (s *Server) CreateHandler(webpackEntry string, handler Handler) httprouter.
 			log.Print("Template parsing error", err)
 		}
 
+		body := map[string]string{
+			"url": r.URL.Path,
+		}
+		jsonBody, err := json.Marshal(body)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusBadRequest)
+			log.Printf("Failed to marshal the body for the WebpackEntry: %s", webpackEntry)
+		}
+
+		res, err := http.Post(ssrEndpoint, "application/json", bytes.NewBuffer(jsonBody))
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusBadRequest)
+			log.Printf("Failed to get the response from the serverless ssr. WebpackEntry: %s", webpackEntry)
+		}
+
+		var ssrData map[string]string
+		json.NewDecoder(res.Body).Decode(&ssrData)
+
+		fmt.Println(ssrData)
+
 		pageVariables := PageVariables{
 			SSR: ssr{
-				MetaTags: template.HTML(`<meta charset="UTF-8">
-				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<title>Mr N</title>`),
-				HTML: template.HTML("<h1>hell asdasd asdasdo</h1>"),
-				CSS:  template.HTML("<style>h1{color: red}</style>"),
+				MetaTags: template.HTML(ssrData["metaTags"]),
+				HTML:     template.HTML(ssrData["html"]),
+				CSS:      template.HTML(ssrData["css"]),
 			},
 			Webpack: webpack{
 				Entry: webpackEntry,
