@@ -34,6 +34,7 @@ func main() {
 	s.Router.GET("/manifest.webapp", s.ManifestWebAppFileHandler)
 
 	s.Router.GET("/", s.CreateHandler("homepage", s.HomeHandler))
+	s.Router.GET("/blog", s.CreateHandler("blog", s.BlogHandler))
 
 	err := http.ListenAndServe(":"+port, s.Router)
 	fmt.Printf("> Server is running in http://localhost:%s/\n", port)

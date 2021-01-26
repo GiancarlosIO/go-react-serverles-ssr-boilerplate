@@ -3,7 +3,8 @@
     "baseUrl": "../",
     "paths": {
       "@libs/*": ["serverless-ssr/src/libs/*"],
-      "@Frontend/*": ["frontend/src/*"]
+      "@Frontend/*": ["frontend/src/*"],
+      "@/*": ["frontend/src/*"]
     }
   }
 }

@@ -2,28 +2,22 @@ import 'source-map-support/register';
 
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server'
-import { StaticRouter } from 'react-router-dom'
 
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/apiGateway';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 
-import App from '@Frontend/Pages/index';
+import ServerLayout from '@Frontend/Layouts/ServerLayout'
+import Homepage from '@Frontend/Pages/Homepage/Homepage';
 
 import schema from './schema';
 
 const homepage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  const context: { url: string } = { url: undefined };
   const html = ReactDOMServer.renderToString(
-    <StaticRouter location={event.body.url} context={context}>
-      <App />
-    </StaticRouter>
+    <ServerLayout>
+      <Homepage />
+    </ServerLayout>
   )
-
-  // if (context.url) {
-  //   redirect(301, context.url)
-  //   return
-  // }
 
   return formatJSONResponse({
     // message: `Hello ${event.body.name}, welcome to the exciting Serverless world!`,
