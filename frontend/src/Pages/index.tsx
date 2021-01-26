@@ -1,7 +1,19 @@
 import * as React from 'react';
+import { Switch, Route } from 'react-router-dom';
 
-const App = () => {
-  return <h1>Hello World!</h1>;
+import Homepage from './Homepage';
+
+const Pages = () => {
+  return (
+    <div>
+      <nav>MainMenu</nav>
+      <Switch>
+        <Route path="/" exact>
+          <Homepage />
+        </Route>
+      </Switch>
+    </div>
+  );
 };
 
-export default App;
+export default Pages;
