@@ -4,6 +4,9 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+
+const entry = require('./entries');
 
 const {
   babelLoader,
@@ -14,25 +17,33 @@ const {
 
 module.exports = {
   context: __dirname,
-  entry: '../src/index.tsx',
+  entry,
   output: {
-    filename: `app.min.js`,
+    filename: `[name].min.js`,
     path: path.resolve(__dirname, '../dist/static'),
     chunkFilename: '[name]-[id].min.js',
     publicPath: '/static/',
   },
   resolve: {
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx'],
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: './tsconfig.paths.json',
+      }),
+    ],
   },
   module: {
     rules: [babelLoader, fileLoader, assetResource, cssLoader],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: '../../templates/app.gohtml',
-      alwaysWriteToDisk: true,
-      filename: 'app.gohtml',
-      minify: false,
+    ...Object.keys(entry).map(entryKey => {
+      return new HtmlWebpackPlugin({
+        template: '../../templates/app.gohtml',
+        alwaysWriteToDisk: true,
+        filename: `${entryKey}.gohtml`,
+        minify: false,
+        chunks: [entryKey],
+      });
     }),
     new FaviconsWebpackPlugin({
       logo: '../src/Images/mr-n-logo.png',

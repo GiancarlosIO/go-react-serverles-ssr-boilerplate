@@ -3,10 +3,10 @@ import * as React from 'react';
 import renderApp from '@/Utils/renderApp';
 import ClientLayout from '@/Layouts/ClientLayout';
 
-import Homepage from './Homepage';
+import Blog from './Blog';
 
 renderApp(
   <ClientLayout>
-    <Homepage />
+    <Blog />
   </ClientLayout>,
 );
