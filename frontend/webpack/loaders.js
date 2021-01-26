@@ -19,3 +19,8 @@ module.exports.assetResource = {
   type: 'asset/resource',
   exclude: /node_modules/,
 };
+
+module.exports.cssLoader = {
+  test: /\.(css|sass|scss)$/i,
+  use: ['style-loader', 'css-loader', 'sass-loader', 'postcss-loader'],
+};
