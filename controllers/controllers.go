@@ -53,7 +53,7 @@ func (s *Server) CreateHandler(webpackEntry string, handler Handler) httprouter.
 
 	return func(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		start := time.Now()
-		tpl, err := template.ParseFiles("frontend/dist/static/app.gohtml")
+		tpl, err := template.ParseFiles("frontend/dist/static/" + webpackEntry + ".gohtml")
 		if err != nil {
 			http.Error(rw, err.Error(), http.StatusBadRequest)
 			log.Print("Template parsing error", err)
@@ -68,6 +68,7 @@ func (s *Server) CreateHandler(webpackEntry string, handler Handler) httprouter.
 			log.Printf("Failed to marshal the body for the WebpackEntry: %s", webpackEntry)
 		}
 
+		fmt.Println("> Making a Request to SSR Endpoint: ", ssrEndpoint)
 		res, err := client.Post(ssrEndpoint, "application/json", bytes.NewBuffer(jsonBody))
 		var html, css, metatags template.HTML
 		if err == nil {
