@@ -38,6 +38,10 @@ type PageVariables struct {
 // Handler defined the function that a controller should expose
 type Handler func(w http.ResponseWriter, r *http.Request, ps httprouter.Params, pageVariables PageVariables)
 
+var client http.Client = http.Client{
+	Timeout: 500 * time.Millisecond,
+}
+
 // CreateHandler creates a handler that calls the handler with the pageVariables struct
 // it will use the webpackEntry value to fetch the ssr data and also to map the template and static paths needed for the current page
 func (s *Server) CreateHandler(webpackEntry string, handler Handler) httprouter.Handle {
@@ -64,22 +68,25 @@ func (s *Server) CreateHandler(webpackEntry string, handler Handler) httprouter.
 			log.Printf("Failed to marshal the body for the WebpackEntry: %s", webpackEntry)
 		}
 
-		res, err := http.Post(ssrEndpoint, "application/json", bytes.NewBuffer(jsonBody))
-		if err != nil {
-			http.Error(rw, err.Error(), http.StatusBadRequest)
+		res, err := client.Post(ssrEndpoint, "application/json", bytes.NewBuffer(jsonBody))
+		var html, css, metatags template.HTML
+		if err == nil {
+			var ssrData map[string]string
+			json.NewDecoder(res.Body).Decode(&ssrData)
+			// fmt.Println(ssrData)
+			metatags = template.HTML(ssrData["metaTags"])
+			html = template.HTML(ssrData["html"])
+			css = template.HTML(ssrData["css"])
+		} else {
+			// http.Error(rw, err.Error(), http.StatusBadRequest)
 			log.Printf("Failed to get the response from the serverless ssr. WebpackEntry: %s", webpackEntry)
 		}
 
-		var ssrData map[string]string
-		json.NewDecoder(res.Body).Decode(&ssrData)
-
-		fmt.Println(ssrData)
-
 		pageVariables := PageVariables{
 			SSR: ssr{
-				MetaTags: template.HTML(ssrData["metaTags"]),
-				HTML:     template.HTML(ssrData["html"]),
-				CSS:      template.HTML(ssrData["css"]),
+				MetaTags: metatags,
+				HTML:     html,
+				CSS:      css,
 			},
 			Webpack: webpack{
 				Entry: webpackEntry,
