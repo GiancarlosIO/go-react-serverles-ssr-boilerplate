@@ -2,7 +2,7 @@
 A fullstack boilerplate that integrates golang + webpack + react + serverless ssr
 
 It's a SPA that uses:
-- Golang: httprouter, postgres, gorm
+- Golang: httprouter, postgres, gorm, custom request logger
 - UI: React
 - styling: styled-components and tailwindcss
 - Webpack: webpack-dev-server, postcss, file-loader, graphql-tag, babel-loader,
@@ -22,12 +22,13 @@ Right now your need terminal to up services (will improve in the future):
   $ npm install
   $ npm start
 ```
-1. Backend:
+3. Backend:
 ```bash
   $ cd serverless-ssr
   $ npm install
   $ npm start
 ```
+4. Go to http://localhost:8080
 
 I'll use this in my next side projects. (wish me luck!)
 
