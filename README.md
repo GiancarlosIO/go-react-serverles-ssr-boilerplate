@@ -10,7 +10,7 @@ It's a SPA that uses:
 - Serverless Framework for the Server Side Rendering. Each page served by golang makes a request to a nodejs lambda to get the HTML and CSS before rendering the SPA.
 
 
-## running
+## Running
 Right now your need terminal to up services (will improve in the future):
 1. Backend:
 ```bash
