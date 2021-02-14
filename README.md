@@ -22,7 +22,7 @@ Right now your need terminal to up services (will improve in the future):
   $ npm install
   $ npm start
 ```
-3. Backend:
+3. Serverless SSR:
 ```bash
   $ cd serverless-ssr
   $ npm install
